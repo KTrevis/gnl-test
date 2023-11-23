@@ -4,7 +4,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 #define INT_DIGITS 19		/* enough for 64 bit integer */
 #define UINT_DIGITS 20
@@ -47,11 +47,17 @@ void	test_0(char *line, int fd) {
 	printf("%ssingle line file with nl\n", white());
 	strcmp("salut a tous\n", line) ? KO() : OK();
 	free(line);
+
+	line = get_next_line(fd);
+	free(line);
 }
 
 void	test_1(char *line, int fd) {
 	printf("%ssingle without nl\n", white());
 	strcmp("oui", line) ? KO() : OK();
+	free(line);
+
+	line = get_next_line(fd);
 	free(line);
 }
 
@@ -78,6 +84,9 @@ void	test_3(char *line, int fd) {
 	line = get_next_line(fd);
 	strcmp("test", line) ? KO() : OK();
 	free(line);
+
+	line = get_next_line(fd);
+	free(line);
 }
 
 void	test_4(char *line, int fd) {
@@ -93,6 +102,9 @@ void	test_4(char *line, int fd) {
 	line = get_next_line(fd);
 	strcmp("ca va\n", line) ? KO() : OK();
 	free(line);
+
+	line = get_next_line(fd);
+	free(line);
 }
 
 int	main() {
@@ -105,8 +117,9 @@ int	main() {
 	fn[2] = test_2;
 	fn[3] = test_3;
 	fn[4] = test_4;
-
-	for (int i = 0; i <= 4; i++) {
+	
+	for (int i = 0; i <= 4; i++)
+	{
 		fd = open(itoa(i), O_RDONLY);
 		line = get_next_line(fd);
 		fn[i](line, fd);
